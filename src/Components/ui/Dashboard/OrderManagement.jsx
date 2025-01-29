@@ -80,6 +80,7 @@ const OrderManagement = () => {
 
                                 return (
                                         <Select
+                                                mode="dropdown"
                                                 value={text}
                                                 onChange={(value) => handleOrderStatusChange(record._id, value)}
                                                 style={{
