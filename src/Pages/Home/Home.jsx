@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import AboutUsSection from './AboutUsSection';
 import Banner from './Banner';
 import CategorySection from './CategorySection';
@@ -10,9 +10,9 @@ import WhatIsSection from './WhatIsSection';
 const Home = () => {
         return (
                 <div>
-                        <Helmet>
-                                <title>Home - Cannasseurs Club</title>
-                        </Helmet>
+                        {/* <Helmet>
+                                <title title>Home - Cannasseurs Club</title>
+                        </Helmet> */}
                         <Banner />
                         <AboutUsSection />
                         <CategorySection />
