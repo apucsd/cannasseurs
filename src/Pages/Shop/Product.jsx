@@ -91,8 +91,8 @@ const relatedProductData = [
 ];
 
 const Product = () => {
-        const [mainImage, setMainImage] = useState(productImg1);
-        const [selectedWeight, setSelectedWeight] = useState('oneUnit');
+        const [mainImage, setMainImage] = useState(productImg1); // Initial main image
+        const [selectedWeight, setSelectedWeight] = useState('oneUnit'); // Default weight
         const [quantity, setQuantity] = useState(1);
 
         // Function to calculate total price
@@ -166,7 +166,6 @@ const Product = () => {
                                                                 className="md:w-[600px] w-[350px] h-[300px] md:h-[440px]"
                                                                 src={mainImage}
                                                                 alt="Main Image"
-                                                                // preview={false}
                                                         />
                                                 </div>
 
