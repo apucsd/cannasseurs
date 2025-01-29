@@ -1,93 +1,60 @@
-import { FaUsers } from "react-icons/fa6";
-import logo from "../../../assets/logo.png";
-import { GrUserNew } from "react-icons/gr";
-import { GiRadioactive } from "react-icons/gi";
-import { IoCheckmarkDoneCircle } from "react-icons/io5";
-import { AiFillProduct } from "react-icons/ai";
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { IoHourglassOutline } from 'react-icons/io5';
+import { FaArrowUpFromGroundWater } from 'react-icons/fa6';
+import { useGetDashboardStatsQuery } from '../../../redux/features/dashboardStatsApi';
 
 const GeneralStateSection = () => {
-  // Simulated dummy data
-  const generalState = {
-    data: {
-      totalActiveUsers: 1500,
-      newSignups: 120,
-      totalActiveVendors: 45,
-      totalCompletedOrders: 320,
-      totalServices: 75,
-    },
-  };
+        const { data: orderOverview } = useGetDashboardStatsQuery([]);
 
-  const isLoading = false; // Simulated loading state
+        const data = [
+                {
+                        title: 'Total Products',
+                        value: orderOverview?.totalProducts,
+                        bgColor: 'bg-green-100',
+                        icon: <FaArrowUpFromGroundWater className="text-green-500" size={28} />,
+                },
+                {
+                        title: 'Total Delivered Orders',
+                        value: orderOverview?.totalDeliverOrder,
+                        bgColor: 'bg-green-50',
+                        icon: <FaCheckCircle className="text-green-500" size={28} />,
+                },
+                {
+                        title: 'Total Canceled Orders',
+                        value: orderOverview?.totalCancelOrder,
+                        bgColor: 'bg-red-50',
+                        icon: <FaTimesCircle className="text-red-500" size={28} />,
+                },
+                {
+                        title: 'Total Pending Orders',
+                        value: orderOverview?.totalPendingOrder,
+                        bgColor: 'bg-yellow-50',
+                        icon: <IoHourglassOutline className="text-yellow-500" size={28} />,
+                },
+        ];
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <img src={logo} alt="" />
-      </div>
-    );
-  }
-
-  const state = generalState?.data;
-
-  return (
-    <div className="grid md:grid-cols-5 gap-6 md:h-[80px]">
-      <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#d8f5d9] flex items-center justify-center">
-          <FaUsers color="#173616" size={24} />
-        </div>
-        <div className="flex flex-col py-1 items-start">
-          <h2 className="text-center text-base">Total User</h2>
-          <h3 className="text-center text-2xl font-semibold">
-            {state?.totalActiveUsers}
-          </h3>
-        </div>
-      </div>
-      <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#d8f5d9] flex items-center justify-center">
-          <GrUserNew color="#173616" size={24} />
-        </div>
-        <div className="flex flex-col py-1 items-start">
-          <h2 className="text-center text-base">New Sign Ups</h2>
-          <h3 className="text-center text-2xl font-semibold">
-            {state?.newSignups}
-          </h3>
-        </div>
-      </div>
-      <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#d8f5d9] flex items-center justify-center">
-          <GiRadioactive color="#173616" size={24} />
-        </div>
-        <div className="flex flex-col py-1 items-start">
-          <h2 className="text-center text-base">Active Buyers</h2>
-          <h3 className="text-center text-2xl font-semibold">
-            {state?.totalActiveVendors}
-          </h3>
-        </div>
-      </div>
-      <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#d8f5d9] flex items-center justify-center">
-          <IoCheckmarkDoneCircle color="#173616" size={24} />
-        </div>
-        <div className="flex flex-col py-1 items-start">
-          <h2 className="text-center text-base">Completed Orders</h2>
-          <h3 className="text-center text-2xl font-semibold">
-            {state?.totalCompletedOrders}
-          </h3>
-        </div>
-      </div>
-      <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#d8f5d9] flex items-center justify-center">
-          <AiFillProduct color="#173616" size={24} />
-        </div>
-        <div className="flex flex-col py-1 items-start">
-          <h2 className="text-center text-base">Total Product</h2>
-          <h3 className="text-center text-2xl font-semibold">
-            {state?.totalServices}
-          </h3>
-        </div>
-      </div>
-    </div>
-  );
+        return (
+                <div className="grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {data.map((item, index) => (
+                                <div
+                                        key={index}
+                                        className={`${item.bgColor} p-6 rounded-xl shadow-md transition-shadow duration-300 border border-gray-100`}
+                                >
+                                        <div className="flex items-center space-x-4">
+                                                <div className="p-3 bg-white rounded-full shadow-sm">{item.icon}</div>
+                                                <div>
+                                                        <h2 className="text-lg font-medium text-gray-700">
+                                                                {item.title}
+                                                        </h2>
+                                                        <h3 className="text-2xl font-bold text-gray-900">
+                                                                {item.value}
+                                                        </h3>
+                                                </div>
+                                        </div>
+                                </div>
+                        ))}
+                </div>
+        );
 };
 
 export default GeneralStateSection;
