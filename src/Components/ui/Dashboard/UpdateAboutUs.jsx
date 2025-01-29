@@ -1,86 +1,175 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Upload, Typography, Card } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Modal, Popconfirm, Space, Table, Upload } from 'antd';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
-const { Title } = Typography;
-const { TextArea } = Input;
+import toast from 'react-hot-toast';
+
+import { useAddAboutMutation, useDeleteAboutMutation, useGetAboutQuery } from '../../../redux/features/aboutApi';
+import getImageUrl from '../../../utils/getImageUrl';
+import { MdDelete } from 'react-icons/md';
 
 const UpdateAboutUs = () => {
-  const [sections, setSections] = useState([
-    { title: "", description: "", image: null, fileList: [] },
-    { title: "", description: "", image: null, fileList: [] },
-    { title: "", description: "", image: null, fileList: [] },
-  ]);
+        const [isModalOpen, setIsModalOpen] = useState(false);
+        const [addAbout] = useAddAboutMutation();
+        const [deleteAbout] = useDeleteAboutMutation();
+        const { data: aboutData } = useGetAboutQuery([]);
 
-  const handleInputChange = (index, field, value) => {
-    const newSections = [...sections];
-    newSections[index][field] = value;
-    setSections(newSections);
-  };
+        const [form] = Form.useForm();
 
-  const handleImageChange = (index, info) => {
-    const newSections = [...sections];
-    newSections[index].image = info.file.originFileObj;
-    newSections[index].fileList = info.fileList;
-    setSections(newSections);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission logic here
-    console.log(sections);
-  };
-
-  return (
-    <div style={{ padding: "20px" }}>
-      <Title level={2}>Update About Us Page</Title>
-      <Form onSubmit={handleSubmit}>
-        {sections.map((section, index) => (
-          <Card
-            key={index}
-            title={`Section ${index + 1}`}
-            style={{ marginBottom: "20px" }}
-          >
-            <Form.Item label="Title">
-              <Input
-                value={section.title}
-                onChange={(e) =>
-                  handleInputChange(index, "title", e.target.value)
+        const handleDelete = async (id) => {
+                try {
+                        const res = await deleteAbout(id).unwrap();
+                        if (res.success) {
+                                toast.success(res.message);
+                        } else {
+                                toast.error('Something went wrong');
+                        }
+                } catch (error) {
+                        toast.error(error?.data?.message || 'Something went wrong');
                 }
-              />
-            </Form.Item>
-            <Form.Item label="Description">
-              <TextArea
-                value={section.description}
-                onChange={(e) =>
-                  handleInputChange(index, "description", e.target.value)
+        };
+        const columns = [
+                {
+                        title: 'Title',
+                        dataIndex: 'title',
+                        key: 'title',
+                },
+                {
+                        title: 'Description',
+                        dataIndex: 'description',
+                        key: 'description',
+                        ellipsis: true,
+                },
+                {
+                        title: 'Image',
+                        dataIndex: 'image',
+                        key: 'image',
+                        render: (text) => (
+                                <img
+                                        className="object-cover w-10 h-10 rounded-full"
+                                        src={getImageUrl(text)}
+                                        alt="about image"
+                                        height={50}
+                                />
+                        ),
+                },
+                {
+                        title: 'Action',
+                        key: 'action',
+                        render: (_, record) => (
+                                <Space size="middle">
+                                        <Popconfirm
+                                                title="Are you sure to delete this about?"
+                                                okText="Yes"
+                                                cancelText="No"
+                                                onConfirm={() => {
+                                                        handleDelete(record._id);
+                                                }}
+                                        >
+                                                <Button danger icon={<MdDelete size={24} />} />
+                                        </Popconfirm>
+                                </Space>
+                        ),
+                },
+        ];
+
+        const showModal = () => {
+                setIsModalOpen(true);
+        };
+
+        const handleCancel = () => {
+                setIsModalOpen(false);
+        };
+
+        const normFile = (e) => {
+                if (Array.isArray(e)) {
+                        return e;
                 }
-                rows={4}
-              />
-            </Form.Item>
-            <Form.Item label="Image">
-              <Upload
-                beforeUpload={() => false}
-                onChange={(info) => handleImageChange(index, info)}
-                fileList={section.fileList}
-                listType="picture"
-              >
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
-              </Upload>
-            </Form.Item>
-          </Card>
-        ))}
-        <Form.Item>
-          <Button
-            className="py-7 w-[30%] bg-[#173616] text-white text-2xl rounded-2xl"
-            htmlType="submit"
-          >
-            Update
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
-  );
+                return e && e.fileList;
+        };
+
+        const onFinish = async (values) => {
+                try {
+                        const formData = new FormData();
+                        formData.append('image', values.image[0].originFileObj);
+                        formData.append('data', JSON.stringify(values));
+
+                        const res = await addAbout(formData).unwrap();
+                        if (res.success) {
+                                toast.success('About section added successfully');
+                                setIsModalOpen(false);
+                                form.resetFields();
+                        } else {
+                                toast.error('Something went wrong');
+                        }
+                } catch (error) {
+                        toast.error(error?.data?.message || 'Something went wrong');
+                }
+        };
+
+        return (
+                <div>
+                        <div className="flex justify-between items-center mb-3">
+                                <h1 className="mb-6 text-2xl font-bold text-start">Manage About Sections</h1>
+                                <Button style={{ backgroundColor: '#00863D' }} type="primary" onClick={showModal}>
+                                        <PlusOutlined /> Add About Section
+                                </Button>
+                        </div>
+                        <Table pagination={false} columns={columns} dataSource={aboutData?.data} />
+                        <Modal
+                                footer={null}
+                                centered
+                                title="Add About Section"
+                                open={isModalOpen}
+                                onCancel={handleCancel}
+                        >
+                                <Form onFinish={onFinish} form={form} layout="vertical">
+                                        <Form.Item
+                                                name="title"
+                                                label="Title"
+                                                rules={[{ required: true, message: 'Please input the title!' }]}
+                                        >
+                                                <Input />
+                                        </Form.Item>
+
+                                        <Form.Item
+                                                name="description"
+                                                label="Description"
+                                                rules={[{ required: true, message: 'Please input the description!' }]}
+                                        >
+                                                <Input />
+                                        </Form.Item>
+
+                                        <Form.Item
+                                                name="image"
+                                                label="Image"
+                                                valuePropName="fileList"
+                                                getValueFromEvent={normFile}
+                                        >
+                                                <Upload
+                                                        multiple={false}
+                                                        name="logo"
+                                                        action="/upload.do"
+                                                        listType="picture"
+                                                        maxCount={1}
+                                                >
+                                                        <Button icon={<UploadOutlined />}>Click to upload</Button>
+                                                </Upload>
+                                        </Form.Item>
+
+                                        <Form.Item>
+                                                <Button
+                                                        style={{ backgroundColor: '#00863D' }}
+                                                        type="primary"
+                                                        htmlType="submit"
+                                                >
+                                                        Submit
+                                                </Button>
+                                        </Form.Item>
+                                </Form>
+                        </Modal>
+                </div>
+        );
 };
 
 export default UpdateAboutUs;

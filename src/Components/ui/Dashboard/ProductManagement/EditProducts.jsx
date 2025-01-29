@@ -60,7 +60,7 @@ const EditProducts = () => {
         const handleSubmit = async (values) => {
                 const formData = new FormData();
 
-                if (values.images.fileList.length > 0) {
+                if (values?.images?.fileList.length > 0) {
                         values.images.fileList.forEach((file) => {
                                 formData.append('image', file.originFileObj);
                         });
