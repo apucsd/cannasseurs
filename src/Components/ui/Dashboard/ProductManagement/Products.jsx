@@ -33,7 +33,7 @@ const Products = () => {
 
         // Columns for the Ant Design table
         const columns = [
-                { title: 'ID', dataIndex: 'id', key: 'id' },
+                { title: 'ID', dataIndex: '_id', key: '_id' },
                 {
                         title: 'Product Name',
                         key: 'name',

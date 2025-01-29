@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu } from 'antd';
+import { Menu, Modal } from 'antd';
 import { MdAdd, MdOutlineProductionQuantityLimits } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoIosLogOut } from 'react-icons/io';
@@ -18,12 +18,19 @@ const Sidebar = () => {
         const navigate = useNavigate();
 
         const handleLogout = () => {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('refreshToken');
-                sessionStorage.removeItem('authToken');
-                sessionStorage.removeItem('refreshToken');
-                Cookies.remove('refreshToken');
-                navigate('/auth/login');
+                Modal.confirm({
+                        centered: true,
+                        title: 'Logout',
+                        content: 'Are you sure you want to logout?',
+                        onOk() {
+                                localStorage.removeItem('authToken');
+                                localStorage.removeItem('refreshToken');
+                                sessionStorage.removeItem('authToken');
+                                sessionStorage.removeItem('refreshToken');
+                                Cookies.remove('refreshToken');
+                                navigate('/auth/login');
+                        },
+                });
         };
 
         const menuItems = [
