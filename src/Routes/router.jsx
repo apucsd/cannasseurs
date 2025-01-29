@@ -26,7 +26,7 @@ import UserManagement from '../Components/ui/Dashboard/UserManagement';
 import PrivacyPolicy from '../Components/ui/Dashboard/Settings/PrivacyPolicy';
 import TermsAndConditions from '../Components/ui/Dashboard/Settings/TermsAndConditions';
 import ChangePassword from '../Pages/Auth/ChangePassword';
-import PersonalInfo from '../Components/ui/Dashboard/Settings/PersonalInfo';
+
 import Notifications from '../Pages/Dashboard/Notifications';
 import FaqManagement from '../Components/ui/Dashboard/FaqManagement';
 import UpdateAboutUs from '../Components/ui/Dashboard/UpdateAboutUs';
@@ -123,10 +123,7 @@ export const router = createBrowserRouter([
                                 path: 'subCategory',
                                 element: <SubCategory />,
                         },
-                        {
-                                path: 'personal-info',
-                                element: <PersonalInfo />,
-                        },
+
                         {
                                 path: 'change-password',
                                 element: <ChangePassword />,
