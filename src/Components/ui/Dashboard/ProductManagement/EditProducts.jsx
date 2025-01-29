@@ -20,6 +20,7 @@ const EditProducts = () => {
         const categories = formatSelectOptions(categoriesData?.data);
 
         const [fileList, setFileList] = useState([]);
+        const [removedImages, setRemovedImages] = useState([]);
 
         useEffect(() => {
                 if (product) {
@@ -46,6 +47,7 @@ const EditProducts = () => {
                 }
         }, [product, form]);
         const handleRemove = (file) => {
+                setRemovedImages((prev) => [...prev, file.uid]);
                 const newFileList = fileList.filter((item) => item.uid !== file.uid);
                 setFileList(newFileList);
         };
@@ -58,6 +60,7 @@ const EditProducts = () => {
                 setFileList(newFileList);
         };
         const handleSubmit = async (values) => {
+                values.imagesToDelete = removedImages;
                 const formData = new FormData();
 
                 if (values?.images?.fileList.length > 0) {

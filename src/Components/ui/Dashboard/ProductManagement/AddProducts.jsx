@@ -151,11 +151,17 @@ const AddProduct = () => {
                                                                 },
                                                         ]}
                                                 >
-                                                        <InputNumber
+                                                        <Select
                                                                 className="w-full"
-                                                                placeholder="Enter weight (in pounds)"
-                                                                min={0}
-                                                        />
+                                                                placeholder="Select unit"
+                                                                defaultValue={1}
+                                                        >
+                                                                <Select.Option value={'1 unit'}>1 Unit</Select.Option>
+                                                                <Select.Option value={'2 units'}>2 Units</Select.Option>
+                                                                <Select.Option value={'3 units'}>3 Units</Select.Option>
+                                                                <Select.Option value={'4 units'}>4 Units</Select.Option>
+                                                                <Select.Option value={'5 units'}>5 Units</Select.Option>
+                                                        </Select>
                                                 </Form.Item>
 
                                                 {/* Discount */}
