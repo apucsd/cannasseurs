@@ -14,7 +14,7 @@ const Login = () => {
                         const response = await login(values).unwrap();
 
                         if (response?.success) {
-                                localStorage.setItem('authToken', response?.data);
+                                localStorage.setItem('authToken', response?.data?.accessToken);
                                 toast.success('Login successful!');
                                 navigate('/dashboard');
                         }
