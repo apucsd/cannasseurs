@@ -2,17 +2,20 @@ import TitleBg from '../../Components/ui/TitleBg';
 import { useEffect, useState } from 'react';
 import { FiCheckSquare } from 'react-icons/fi';
 import ProductCard from '../../Components/ui/ProductCard';
-import { Link, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import toast from 'react-hot-toast';
 import { useGetAllProductsQuery, useGetProductByIdQuery } from '../../redux/features/productApi';
 import getImageUrl from '../../utils/getImageUrl';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/features/cart/cartSlice';
+import { Button, Form, Input, Modal } from 'antd';
+import { useCreateOrderMutation } from '../../redux/features/orderApi';
 
 const Product = () => {
         const params = useParams();
         const dispatch = useDispatch();
-
+        const [isModalOpen, setIsModalOpen] = useState(false);
+        const [createOrder, { isLoading }] = useCreateOrderMutation();
         const { data: product } = useGetProductByIdQuery(params.id);
         const { data: relatedProducts } = useGetAllProductsQuery(
                 [{ name: 'category', value: product?.category?._id }],
@@ -40,6 +43,32 @@ const Product = () => {
                 toast.success('This product added to cart!');
                 console.log(cartProduct);
         };
+
+        const handleDirectOrder = async (values) => {
+                const orderProduct = {
+                        fullName: values.fullName,
+                        email: values.email,
+                        phone: values.phone,
+                        country: values.country,
+                        state: values.state,
+                        address: values.address,
+                        productId: product._id,
+                        weight: Number(selectedWeight),
+                        quantity: 1,
+                        price: product.price,
+                };
+                console.log(orderProduct);
+                try {
+                        const res = await createOrder(orderProduct).unwrap();
+                        if (res.success) {
+                                toast.success('Order placed successfully!');
+                                setIsModalOpen(false);
+                        }
+                } catch (error) {
+                        toast.error(error?.data?.message || 'Something went wrong');
+                }
+        };
+
         return (
                 <>
                         <TitleBg title={product?.name} />
@@ -134,11 +163,13 @@ const Product = () => {
                                                         >
                                                                 Add to Cart
                                                         </button>
-                                                        <Link to={'/cart'}>
-                                                                <button className="mt-4 w-40 bg-[#005125] text-white px-5 py-3 rounded-xl hover:bg-[#006F2C]">
-                                                                        Order Now
-                                                                </button>
-                                                        </Link>
+
+                                                        <button
+                                                                onClick={() => setIsModalOpen(true)}
+                                                                className="mt-4 w-40 bg-[#005125] text-white px-5 py-3 rounded-xl hover:bg-[#006F2C]"
+                                                        >
+                                                                Order Now
+                                                        </button>
                                                 </div>
                                                 <h1 className="flex gap-2 items-center">
                                                         <span className="font-bold">Available:</span>
@@ -181,6 +212,76 @@ const Product = () => {
                                         ))}
                                 </div>
                         </div>
+
+                        <Modal width={720} open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
+                                <Form layout="vertical" className="" onFinish={handleDirectOrder}>
+                                        <div className="">
+                                                <h2 className="mb-4 text-lg">Billing Information</h2>
+                                                <Form.Item
+                                                        label="Business Name"
+                                                        name="fullName"
+                                                        rules={[{ required: true }]}
+                                                >
+                                                        <Input className="py-2" placeholder="Business Name" />
+                                                </Form.Item>
+                                                <div className="flex gap-5 w-full">
+                                                        <Form.Item
+                                                                label="Country"
+                                                                name="country"
+                                                                rules={[{ required: true }]}
+                                                                className="w-1/2"
+                                                        >
+                                                                <Input className="py-2" placeholder="Country" />
+                                                        </Form.Item>
+                                                        <Form.Item
+                                                                label="State/Province"
+                                                                name="state"
+                                                                rules={[{ required: true }]}
+                                                                className="w-1/2"
+                                                        >
+                                                                <Input className="py-2" placeholder="State/Province" />
+                                                        </Form.Item>
+                                                </div>
+                                                <Form.Item
+                                                        label="Street Address"
+                                                        name="address"
+                                                        rules={[{ required: true }]}
+                                                >
+                                                        <Input className="py-2" placeholder="Street Address" />
+                                                </Form.Item>
+                                                <Form.Item
+                                                        label="Email"
+                                                        name="email"
+                                                        rules={[{ required: true, type: 'email' }]}
+                                                >
+                                                        <Input className="py-2" placeholder="Email" />
+                                                </Form.Item>
+                                                <Form.Item label="Phone" name="phone" rules={[{ required: true }]}>
+                                                        <Input className="py-2" placeholder="Phone" />
+                                                </Form.Item>
+                                                <h1 className="mb-2 text-2xl font-bold">Additional Info</h1>
+                                                <Form.Item label="Order Notes (Optional)" name="orderNotes">
+                                                        <Input.TextArea placeholder="Order Notes (Optional)" />
+                                                </Form.Item>
+
+                                                <div>
+                                                        <Form.Item>
+                                                                <Button
+                                                                        style={{
+                                                                                width: '100%',
+                                                                                backgroundColor: '#005125',
+                                                                                height: 48,
+                                                                        }}
+                                                                        type="primary"
+                                                                        htmlType="submit"
+                                                                >
+                                                                        {isLoading ? 'Placing Order...' : 'Place Order'}
+                                                                </Button>
+                                                        </Form.Item>
+                                                </div>
+                                        </div>
+                                </Form>
+                        </Modal>
                 </>
         );
 };
