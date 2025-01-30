@@ -18,7 +18,18 @@ const contactApi = baseApi.injectEndpoints({
                         }),
                         invalidatesTags: ['Contact'],
                 }),
+                updateContact: builder.mutation({
+                        query: (values) => {
+                                console.log(values);
+                                return {
+                                        url: `/subscriber/replied/${values.id}`,
+                                        method: 'POST',
+                                        body: values.data,
+                                };
+                        },
+                        invalidatesTags: ['Contact'],
+                }),
         }),
 });
 
-export const { useGetContactQuery, useAddContactMutation } = contactApi;
+export const { useGetContactQuery, useAddContactMutation, useUpdateContactMutation } = contactApi;

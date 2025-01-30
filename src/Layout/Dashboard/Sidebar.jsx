@@ -4,7 +4,7 @@ import { MdAdd, MdOutlineProductionQuantityLimits } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoSettingsOutline } from 'react-icons/io5';
-import { LuLayoutDashboard } from 'react-icons/lu';
+import { LuLayoutDashboard, LuUsers } from 'react-icons/lu';
 import Cookies from 'js-cookie';
 import logo from '../../assets/logoGreenBg.png';
 import { AiOutlineUnorderedList } from 'react-icons/ai';
@@ -58,6 +58,11 @@ const Sidebar = () => {
                         key: '/dashboard/order-management',
                         icon: <AiOutlineUnorderedList size={24} />,
                         label: <Link to="/dashboard/order-management">Order Management</Link>,
+                },
+                {
+                        key: '/dashboard/subscriber-management',
+                        icon: <LuUsers size={24} />,
+                        label: <Link to="/dashboard/subscriber-management">Subscriber Management</Link>,
                 },
 
                 {

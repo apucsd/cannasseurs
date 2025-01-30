@@ -33,6 +33,7 @@ import UpdateAboutUs from '../Components/ui/Dashboard/UpdateAboutUs';
 import PrivateRoute from '../provider/PrivateRoute';
 import PrivacyPolicyPage from '../Pages/PrivacyPolicy';
 import TermsAndConditionsPage from '../Pages/TermsAndConditions';
+import SubscriberManagement from '../Pages/Dashboard/SubscriberManagement';
 
 export const router = createBrowserRouter([
         {
@@ -117,6 +118,10 @@ export const router = createBrowserRouter([
                         {
                                 path: 'user-management',
                                 element: <UserManagement />,
+                        },
+                        {
+                                path: 'subscriber-management',
+                                element: <SubscriberManagement />,
                         },
                         // {
                         //   path: "/edit-order/:id",
