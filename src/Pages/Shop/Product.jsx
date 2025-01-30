@@ -6,9 +6,13 @@ import { Link, useParams } from 'react-router';
 import toast from 'react-hot-toast';
 import { useGetAllProductsQuery, useGetProductByIdQuery } from '../../redux/features/productApi';
 import getImageUrl from '../../utils/getImageUrl';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/features/cart/cartSlice';
 
 const Product = () => {
         const params = useParams();
+        const dispatch = useDispatch();
+
         const { data: product } = useGetProductByIdQuery(params.id);
         const { data: relatedProducts } = useGetAllProductsQuery(
                 [{ name: 'category', value: product?.category?._id }],
@@ -22,8 +26,20 @@ const Product = () => {
                         setMainImage(getImageUrl(product.image[0]));
                 }
         }, [product]);
-        const [selectedWeight, setSelectedWeight] = useState('oneUnit');
+        const [selectedWeight, setSelectedWeight] = useState('1');
 
+        const handleAddToCart = () => {
+                const cartProduct = {
+                        _id: product._id,
+                        name: product.name,
+                        weight: selectedWeight,
+                        price: product.price,
+                        image: product.image[0],
+                };
+                dispatch(addToCart(cartProduct));
+                toast.success('This product added to cart!');
+                console.log(cartProduct);
+        };
         return (
                 <>
                         <TitleBg title={product?.name} />
@@ -76,11 +92,11 @@ const Product = () => {
                                                                 onChange={(e) => setSelectedWeight(e.target.value)}
                                                                 className="border rounded-xl px-4 py-3 w-[40%] bg-gray-200"
                                                         >
-                                                                <option value="oneUnit">1 Unit</option>
-                                                                <option value="twoUnit">2 Unit</option>
-                                                                <option value="threeUnit">3 Unit</option>
-                                                                <option value="fourUnit">4 Unit</option>
-                                                                <option value="fiveUnit">5 Unit</option>
+                                                                <option value="1">1 Unit</option>
+                                                                <option value="2">2 Unit</option>
+                                                                <option value="3">3 Unit</option>
+                                                                <option value="4">4 Unit</option>
+                                                                <option value="5">5 Unit</option>
                                                         </select>
                                                 </div>
 
@@ -113,7 +129,7 @@ const Product = () => {
                                                 {/* Add to Cart Button */}
                                                 <div className="flex gap-4 mb-5 font-bold md:text-xl md:mb-0">
                                                         <button
-                                                                onClick={() => toast.success('product added to cart!')}
+                                                                onClick={() => handleAddToCart()}
                                                                 className="mt-4 w-40  text-[#005125] px-5 py-3 rounded-xl border border-[#005125] hover:bg-[#006F2C] hover:text-white"
                                                         >
                                                                 Add to Cart

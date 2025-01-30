@@ -7,9 +7,11 @@ import { NavLink } from 'react-router-dom';
 import { Menu, Dropdown, Badge } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useGetAllCategoriesQuery } from '../../redux/features/categoryApi';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
         const [isMenuOpen, setIsMenuOpen] = useState(false);
+        const totalCartItems = useSelector((state) => state.cart.items.length);
 
         const menuRef = useRef(null);
         const { data: categoryData } = useGetAllCategoriesQuery();
@@ -106,7 +108,7 @@ const Navbar = () => {
                                                 </Badge>
                                         </NavLink> */}
                                         <NavLink to="/cart">
-                                                <Badge count={4}>
+                                                <Badge count={totalCartItems}>
                                                         <IoCartOutline size={24} />
                                                 </Badge>
                                         </NavLink>
