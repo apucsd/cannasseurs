@@ -1,9 +1,14 @@
-import { Button, Form, Input, Modal, Table, Upload } from 'antd';
+import { Button, Form, Input, Modal, Popconfirm, Space, Table, Upload } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { useAddCategoryMutation, useGetAllCategoriesQuery } from '../../../../redux/features/categoryApi';
+import {
+        useAddCategoryMutation,
+        useDeleteCategoryMutation,
+        useGetAllCategoriesQuery,
+} from '../../../../redux/features/categoryApi';
 import toast from 'react-hot-toast';
 import getImageUrl from '../../../../utils/getImageUrl';
+import { BsTrash3 } from 'react-icons/bs';
 
 const Category = () => {
         const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +17,17 @@ const Category = () => {
 
         const [form] = Form.useForm();
 
+        const [deleteCategory] = useDeleteCategoryMutation();
+        const handleDelete = async (id) => {
+                try {
+                        const res = await deleteCategory(id).unwrap();
+                        if (res.success) {
+                                toast.success(res.message);
+                        }
+                } catch (error) {
+                        toast.error(error?.data?.message || 'Something went wrong');
+                }
+        };
         const columns = [
                 {
                         title: 'Category Name',
@@ -36,6 +52,32 @@ const Category = () => {
                                         alt="category image"
                                         height={50}
                                 />
+                        ),
+                },
+
+                {
+                        title: 'Action',
+                        key: 'action',
+                        render: (_, record) => (
+                                <Space>
+                                        <Popconfirm
+                                                title="Are you sure you want to delete this category?"
+                                                onConfirm={() => handleDelete(record._id)}
+                                                okText="Yes"
+                                                cancelText="No"
+                                        >
+                                                <Button
+                                                        type="text"
+                                                        icon={
+                                                                <BsTrash3
+                                                                        size={20}
+                                                                        color="red"
+                                                                        className="text-red-600"
+                                                                />
+                                                        }
+                                                />
+                                        </Popconfirm>
+                                </Space>
                         ),
                 },
         ];

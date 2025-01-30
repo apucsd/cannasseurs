@@ -4,12 +4,15 @@ import { MdOutlineEmail } from 'react-icons/md';
 
 import leftBgImg from '../../assets/line-left-04.png.png';
 import rightBgImg from '../../assets/earth-round.png.png';
+import toast from 'react-hot-toast';
 
 const ContactUsSection = () => {
         const [form] = Form.useForm();
 
         const onFinish = (values) => {
                 console.log('Form Values:', values);
+                form.resetFields();
+                toast.success('Form submitted successfully!');
         };
 
         return (

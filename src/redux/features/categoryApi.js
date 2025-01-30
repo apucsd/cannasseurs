@@ -8,6 +8,7 @@ const categoryApi = baseApi.injectEndpoints({
                                 method: 'POST',
                                 body: values,
                         }),
+                        invalidatesTags: ['Categories'],
                 }),
                 getAllCategories: builder.query({
                         query: () => ({
@@ -20,8 +21,17 @@ const categoryApi = baseApi.injectEndpoints({
                                         meta: response.pagination,
                                 };
                         },
+                        providesTags: ['Categories'],
+                }),
+
+                deleteCategory: builder.mutation({
+                        query: (id) => ({
+                                url: `/category/${id}`,
+                                method: 'DELETE',
+                        }),
+                        invalidatesTags: ['Categories'],
                 }),
         }),
 });
 
-export const { useAddCategoryMutation, useGetAllCategoriesQuery } = categoryApi;
+export const { useAddCategoryMutation, useGetAllCategoriesQuery, useDeleteCategoryMutation } = categoryApi;
