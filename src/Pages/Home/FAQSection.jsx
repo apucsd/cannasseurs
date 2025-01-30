@@ -1,84 +1,57 @@
-import { Button, Collapse } from 'antd';
 import { useState } from 'react';
-import buttonLogo from '../../assets/Frame 1000011842.png';
-import { Link } from 'react-router';
 import { useGetFaqQuery } from '../../redux/features/faqApi';
-const FAQSection = () => {
-        const { data: faqsData } = useGetFaqQuery([]);
+import { BsChevronDown } from 'react-icons/bs';
+import { Link } from 'react-router';
+import { Button } from 'antd';
+import buttonLogo from '../../assets/Frame 1000011842.png';
 
-        const [activePanel, setActivePanel] = useState(null);
+const FAQ = () => {
+        const { data: faqsData, isLoading, error } = useGetFaqQuery();
+        const [openPanel, setOpenPanel] = useState(null);
 
-        // const faqData = [
-        //         {
-        //                 key: '1',
-        //                 header: 'What is this website about?',
-        //                 content: "This website is a platform where users can explore various services and information. It's designed to provide a user-friendly experience with easy navigation and relevant content.",
-        //         },
-        //         {
-        //                 key: '2',
-        //                 header: 'How do I create an account?',
-        //                 content: "To create an account, click on the 'Sign Up' button and fill in your details. A confirmation email will be sent to you to verify your email address.",
-        //         },
-        //         {
-        //                 key: '3',
-        //                 header: 'What services do you offer?',
-        //                 content: "We offer a variety of services including hair, nail, and beauty treatments. You can find detailed information on each service under the 'Services' section of the website.",
-        //         },
-        //         {
-        //                 key: '4',
-        //                 header: 'How can I contact customer support?',
-        //                 content: "You can contact our customer support team via the 'Contact Us' page or by emailing us at support@example.com. We're here to help you 24/7.",
-        //         },
-        //         {
-        //                 key: '5',
-        //                 header: 'What payment methods do you accept?',
-        //                 content: 'We accept a range of payment methods including credit cards, PayPal, and bank transfers. You can choose your preferred method during the checkout process.',
-        //         },
-        //         {
-        //                 key: '6',
-        //                 header: 'How do I track my order?',
-        //                 content: "Once your order is placed, you will receive a confirmation email with a tracking link. You can track your order status in the 'Order History' section of your account.",
-        //         },
-        // ];
-
-        const handlePanelChange = (key) => {
-                setActivePanel(key ? Number(key) : null);
+        const togglePanel = (id) => {
+                setOpenPanel(openPanel === id ? null : id);
         };
+
+        if (isLoading) return <p className="text-center">Loading FAQs...</p>;
+        if (error) return <p className="text-center text-red-500">Failed to load FAQs.</p>;
 
         return (
                 <div className="p-8 mx-auto max-w-7xl md:p-20 md:px-40">
-                        <h1 className="mb-10 text-2xl font-bold text-center md:text-4xl clash">
+                        <h1 className="mb-10 text-3xl font-bold text-center md:text-4xl">
                                 Frequently Asked <span className="text-[#00863D]">Questions</span>
                         </h1>
-                        <Collapse
-                                accordion
-                                expandIconPosition="end"
-                                bordered={false}
-                                onChange={handlePanelChange}
-                                className="bg-[#eeeeee] space-y-3"
-                        >
-                                {faqsData?.map((item) => (
-                                        <Collapse.Panel
-                                                key={item._id}
-                                                header={item.question}
-                                                className={`rounded-2xl ${
-                                                        activePanel === Number(item._id)
-                                                                ? 'bg-[#ebfff4] border-t-8 border-[#033F1B]'
-                                                                : 'bg-white'
-                                                }`}
+                        <div className="space-y-4">
+                                {faqsData?.map((faq) => (
+                                        <div
+                                                key={faq._id}
+                                                className="overflow-hidden rounded-xl border border-[#54B781]"
                                         >
-                                                <div
-                                                        className={`p-4 ${
-                                                                activePanel === Number(item._id)
-                                                                        ? 'text-black'
-                                                                        : 'text-gray-600'
+                                                <button
+                                                        onClick={() => togglePanel(faq._id)}
+                                                        className={`w-full flex justify-between items-center p-4 text-lg font-semibold transition-all ${
+                                                                openPanel === faq._id
+                                                                        ? 'bg-[#EAFBE7] text-[#033F1B] border-t-[10px] border-[#033F1B]'
+                                                                        : 'bg-white text-black'
                                                         }`}
                                                 >
-                                                        {item.answer}
-                                                </div>
-                                        </Collapse.Panel>
+                                                        {faq.question}
+                                                        <span
+                                                                className={`transform transition-transform ${
+                                                                        openPanel === faq._id
+                                                                                ? 'rotate-180'
+                                                                                : 'rotate-0'
+                                                                }`}
+                                                        >
+                                                                <BsChevronDown />
+                                                        </span>
+                                                </button>
+                                                {openPanel === faq._id && (
+                                                        <div className="p-4 text-gray-700 bg-white">{faq.answer}</div>
+                                                )}
+                                        </div>
                                 ))}
-                        </Collapse>
+                        </div>
 
                         <div className="my-2 w-full text-center md:my-5">
                                 <Link to={'/f-a-q'}>
@@ -94,4 +67,4 @@ const FAQSection = () => {
         );
 };
 
-export default FAQSection;
+export default FAQ;
