@@ -6,7 +6,7 @@ const baseApi = createApi({
         baseQuery: fetchBaseQuery({
                 baseUrl: `${baseUrl}/api/v1`,
                 prepareHeaders: (headers, { endpoint }) => {
-                        console.log(endpoint);
+                        // console.log(endpoint);
                         if (endpoint == 'resetPassword') {
                                 const token = localStorage.getItem('oneTimeToken');
                                 if (token) {

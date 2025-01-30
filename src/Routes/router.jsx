@@ -31,6 +31,8 @@ import Notifications from '../Pages/Dashboard/Notifications';
 import FaqManagement from '../Components/ui/Dashboard/FaqManagement';
 import UpdateAboutUs from '../Components/ui/Dashboard/UpdateAboutUs';
 import PrivateRoute from '../provider/PrivateRoute';
+import PrivacyPolicyPage from '../Pages/PrivacyPolicy';
+import TermsAndConditionsPage from '../Pages/TermsAndConditions';
 
 export const router = createBrowserRouter([
         {
@@ -72,6 +74,15 @@ export const router = createBrowserRouter([
                         {
                                 path: '/checkout',
                                 element: <Checkout />,
+                        },
+
+                        {
+                                path: '/terms-and-conditions',
+                                element: <TermsAndConditionsPage />,
+                        },
+                        {
+                                path: '/privacy-policy',
+                                element: <PrivacyPolicyPage />,
                         },
                 ],
         },

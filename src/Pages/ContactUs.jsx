@@ -4,14 +4,22 @@ import { MdEmail } from 'react-icons/md';
 import { Button, Form, Input } from 'antd';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
+import { useAddContactMutation } from '../redux/features/contactApi';
 
 const ContactUs = () => {
         const [form] = Form.useForm();
+        const [addContact, { isLoading }] = useAddContactMutation();
 
-        const onFinish = (values) => {
-                console.log('Form Values:', values);
-                form.resetFields();
-                toast.success('Form submitted successfully!');
+        const onFinish = async (values) => {
+                try {
+                        const res = await addContact(values).unwrap();
+                        if (res.success) {
+                                toast.success(res.message);
+                                form.resetFields();
+                        }
+                } catch (error) {
+                        toast.error(error?.data?.message || 'Something went wrong');
+                }
         };
 
         return (
@@ -50,7 +58,7 @@ const ContactUs = () => {
                                                         >
                                                                 {/* Full Name */}
                                                                 <Form.Item
-                                                                        name="fullName"
+                                                                        name="name"
                                                                         label={
                                                                                 <span className="text-white">
                                                                                         Business Name
@@ -133,7 +141,9 @@ const ContactUs = () => {
                                                                                 htmlType="submit"
                                                                                 className="w-full bg-[#0c9b45] font-semibold text-white py-5"
                                                                         >
-                                                                                Send Message
+                                                                                {isLoading
+                                                                                        ? 'Sending...'
+                                                                                        : 'Send Message'}
                                                                         </Button>
                                                                 </Form.Item>
                                                         </Form>

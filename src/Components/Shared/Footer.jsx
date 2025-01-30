@@ -11,7 +11,7 @@ const Footer = () => {
 
         return (
                 <div className=" bg-[#173616]">
-                        <div className="md:h-[350px] md:pt-28 pt-10 text-white max-w-7xl mx-auto">
+                        <div className="md:min-h-[350px] md:pt-28 pt-10 text-white max-w-7xl mx-auto">
                                 <div className="gap-9 justify-center items-start px-10 md:flex md:px-20">
                                         <div>
                                                 <img className="mb-5" src={logo} alt="logo" />
@@ -106,6 +106,18 @@ const Footer = () => {
                                                                                 Subscribe
                                                                         </Button>
                                                                 </Form.Item>
+                                                        </div>
+                                                        <div className="text-lg text-white">
+                                                                <li>
+                                                                        <Link to={'/terms-and-conditions'}>
+                                                                                Terms & Conditions
+                                                                        </Link>
+                                                                </li>
+                                                                <li>
+                                                                        <Link to={'/privacy-policy'}>
+                                                                                Privacy Policy
+                                                                        </Link>
+                                                                </li>
                                                         </div>
                                                 </Form>
                                         </div>
