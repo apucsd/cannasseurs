@@ -5,14 +5,23 @@ import { MdOutlineEmail } from 'react-icons/md';
 import leftBgImg from '../../assets/line-left-04.png.png';
 import rightBgImg from '../../assets/earth-round.png.png';
 import toast from 'react-hot-toast';
+import { useAddContactMutation } from '../../redux/features/contactApi';
 
 const ContactUsSection = () => {
         const [form] = Form.useForm();
 
-        const onFinish = (values) => {
-                console.log('Form Values:', values);
-                form.resetFields();
-                toast.success('Form submitted successfully!');
+        const [addContact, { isLoading }] = useAddContactMutation();
+
+        const onFinish = async (values) => {
+                try {
+                        const res = await addContact(values).unwrap();
+                        if (res.success) {
+                                toast.success(res.message);
+                                form.resetFields();
+                        }
+                } catch (error) {
+                        toast.error(error?.data?.message || 'Something went wrong');
+                }
         };
 
         return (
@@ -65,7 +74,7 @@ const ContactUsSection = () => {
                                                 >
                                                         {/* Full Name */}
                                                         <Form.Item
-                                                                name="fullName"
+                                                                name="name"
                                                                 label={<span className="text-white">Full Name</span>}
                                                                 rules={[
                                                                         {
@@ -129,7 +138,9 @@ const ContactUsSection = () => {
                                                                         htmlType="submit"
                                                                         className="w-full bg-[#FCD707] font-bold text-lg py-5 text-black"
                                                                 >
-                                                                        Submit Your Message
+                                                                        {isLoading
+                                                                                ? 'Submitting...'
+                                                                                : 'Submit Your Message'}
                                                                 </Button>
                                                         </Form.Item>
                                                 </Form>
