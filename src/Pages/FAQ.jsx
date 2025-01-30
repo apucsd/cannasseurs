@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGetFaqQuery } from '../redux/features/faqApi'; // Assuming you're using RTK Query
+import { BsChevronDown } from 'react-icons/bs';
 
 const FAQ = () => {
         const { data: faqsData, isLoading, error } = useGetFaqQuery();
@@ -39,7 +40,7 @@ const FAQ = () => {
                                                                                 : 'rotate-0'
                                                                 }`}
                                                         >
-                                                                ▼
+                                                                <BsChevronDown />
                                                         </span>
                                                 </button>
                                                 {openPanel === faq._id && (
