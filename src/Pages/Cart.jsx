@@ -24,6 +24,7 @@ const Cart = () => {
         const handleDelete = (key) => {
                 dispatch(removeFromCart(key));
         };
+
         const columns = [
                 {
                         title: 'Product',
@@ -108,26 +109,54 @@ const Cart = () => {
                                 </div>
                                 <div className="md:w-[30%] border-t-8 mt-10 md:mt-0 border-t-[#173616] bg-white rounded-2xl">
                                         <div className="p-6">
-                                                <h1 className="pb-3 mb-4 text-2xl font-bold border-b-2">Cart Total</h1>
+                                                {cartItems.length > 0 ? (
+                                                        <>
+                                                                <h1 className="pb-3 mb-4 text-2xl font-bold border-b-2">
+                                                                        Cart Total
+                                                                </h1>
 
-                                                <div className="flex justify-between pb-3 mb-2 text-lg border-b-2">
-                                                        <span>Subtotal:</span>
-                                                        <span className="font-semibold">${subtotal.toFixed(2)}</span>
-                                                </div>
-                                                <div className="flex justify-between pb-3 mb-2 text-lg border-b-2">
-                                                        <span>Shipping:</span>
-                                                        <span className="font-semibold">Free</span>
-                                                </div>
-                                                <div className="flex justify-between pb-3 mb-2 text-lg">
-                                                        <span>Total:</span>
-                                                        <span className="font-semibold">${total.toFixed(2)}</span>
-                                                </div>
+                                                                <div className="flex justify-between pb-3 mb-2 text-lg border-b-2">
+                                                                        <span>Subtotal:</span>
+                                                                        <span className="font-semibold">
+                                                                                ${subtotal.toFixed(2)}
+                                                                        </span>
+                                                                </div>
+                                                                <div className="flex justify-between pb-3 mb-2 text-lg border-b-2">
+                                                                        <span>Shipping:</span>
+                                                                        <span className="font-semibold">Free</span>
+                                                                </div>
+                                                                <div className="flex justify-between pb-3 mb-2 text-lg">
+                                                                        <span>Total:</span>
+                                                                        <span className="font-semibold">
+                                                                                ${total.toFixed(2)}
+                                                                        </span>
+                                                                </div>
 
-                                                <Link to={'/checkout'}>
-                                                        <button className="w-full mt-4 bg-[#173616] text-white py-3 rounded-2xl hover:bg-[#145014]">
-                                                                Proceed to Checkout
-                                                        </button>
-                                                </Link>
+                                                                <Link to={'/checkout'}>
+                                                                        <button className="w-full mt-4 bg-[#173616] text-white py-3 rounded-2xl hover:bg-[#145014]">
+                                                                                Proceed to Checkout
+                                                                        </button>
+                                                                </Link>
+                                                        </>
+                                                ) : (
+                                                        <div className="flex justify-center items-center h-full">
+                                                                <div className="text-center">
+                                                                        {/* <img src={emptyCart} alt="" className="mx-auto" /> */}
+                                                                        <h1 className="text-2xl font-bold">
+                                                                                Your Cart is Empty
+                                                                        </h1>
+                                                                        <p className="text-lg text-gray-500">
+                                                                                Please add some items to your cart
+                                                                                first.
+                                                                        </p>
+                                                                        <Link to={'/'}>
+                                                                                <button className="mt-4 bg-[#173616] text-white py-3 px-5 rounded-2xl hover:bg-[#145014]">
+                                                                                        Go Shopping
+                                                                                </button>
+                                                                        </Link>
+                                                                </div>
+                                                        </div>
+                                                )}
                                         </div>
                                 </div>
                         </div>
