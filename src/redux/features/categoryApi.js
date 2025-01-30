@@ -23,7 +23,14 @@ const categoryApi = baseApi.injectEndpoints({
                         },
                         providesTags: ['Categories'],
                 }),
-
+                singleCategory: builder.query({
+                        query: (id) => ({
+                                url: `/category/${id}`,
+                                method: 'GET',
+                        }),
+                        transformResponse: (response) => response.data,
+                        providesTags: ['Categories'],
+                }),
                 deleteCategory: builder.mutation({
                         query: (id) => ({
                                 url: `/category/${id}`,
@@ -34,4 +41,5 @@ const categoryApi = baseApi.injectEndpoints({
         }),
 });
 
-export const { useAddCategoryMutation, useGetAllCategoriesQuery, useDeleteCategoryMutation } = categoryApi;
+export const { useAddCategoryMutation, useGetAllCategoriesQuery, useDeleteCategoryMutation, useSingleCategoryQuery } =
+        categoryApi;

@@ -23,7 +23,7 @@ const Navbar = () => {
                                                 <Menu>
                                                         {categoryData?.data?.map((category) => (
                                                                 <Menu.Item key={category?._id}>
-                                                                        <NavLink to={category?._id}>
+                                                                        <NavLink to={`/shop/category/${category?._id}`}>
                                                                                 {category.name}
                                                                         </NavLink>
                                                                 </Menu.Item>
